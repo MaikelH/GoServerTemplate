@@ -1,0 +1,2 @@
+APP_LISTEN_ADDRESS="localhost:8080"
+APP_OPENAPI_ADDRESS="http://localhost:8080"
