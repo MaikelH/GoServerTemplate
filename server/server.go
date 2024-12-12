@@ -10,8 +10,7 @@ type Server struct {
 }
 
 func (s *Server) Start() error {
-	http_server.StartHTTPServer(s.Config)
-	return nil
+	return http_server.StartHTTPServer(s.Config)
 }
 
 func NewServer(config *types.Configuration) *Server {
