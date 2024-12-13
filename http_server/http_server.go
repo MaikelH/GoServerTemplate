@@ -18,7 +18,16 @@ func StartHTTPServer(c *types.Configuration) error {
 		return errors.NewServiceError(errors.ErrServerError, nil, "missing listen address")
 	}
 
-	s := fuego.NewServer(fuego.WithAddr(c.ListenAddress))
+	s := fuego.NewServer(fuego.WithAddr(c.ListenAddress),
+		fuego.WithSecurity(openapi3.SecuritySchemes{
+			"bearerAuth": &openapi3.SecuritySchemeRef{
+				Value: openapi3.NewSecurityScheme().
+					WithType("http").
+					WithScheme("bearer").
+					WithBearerFormat("JWT").
+					WithDescription("Enter your JWT token in the format: Bearer <token>"),
+			},
+		}))
 
 	if c.OpenAPIAddress != "" {
 		s.OpenApiSpec.Servers = []*openapi3.Server{{URL: c.OpenAPIAddress}}
