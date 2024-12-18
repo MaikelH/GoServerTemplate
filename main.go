@@ -17,10 +17,7 @@ func main() {
 
 	setupLogger(configuration)
 
-	slog.Info("Starting Retrolink backend server")
-
-	slog.Info("Loading configuration")
-
+	slog.Info("Starting server")
 	srv := server.NewServer(configuration)
 	err = srv.Start()
 	if err != nil {
