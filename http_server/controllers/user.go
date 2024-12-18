@@ -5,17 +5,18 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-fuego/fuego"
+	"goservertemplate/http_server/middleware"
+	"goservertemplate/types"
 	"net/http"
-	"retrolink-backend/http_server/middleware"
 )
 
 type UserController struct {
 }
 
-func (u *UserController) MountRoutes(s *fuego.Server) {
+func (u *UserController) MountRoutes(s *fuego.Server, config *types.Configuration) {
 	userGroup := fuego.Group(s, "user")
 
-	fuego.Use(userGroup, middleware.EnsureValidToken())
+	fuego.Use(userGroup, middleware.EnsureValidToken(config))
 
 	get := fuego.Get(userGroup, "/", func(context fuego.ContextNoBody) (any, error) {
 		token := context.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)

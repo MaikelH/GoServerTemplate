@@ -1,4 +1,4 @@
-module retrolink-backend
+module goservertemplate
 
 go 1.23
 

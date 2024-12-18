@@ -2,10 +2,11 @@ package middleware
 
 import (
 	"context"
+	"goservertemplate/types"
 	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
@@ -26,8 +27,15 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 }
 
 // EnsureValidToken is a middleware that will check the validity of our JWT.
-func EnsureValidToken() func(next http.Handler) http.Handler {
-	issuerURL, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/")
+func EnsureValidToken(config *types.Configuration) func(next http.Handler) http.Handler {
+	if config.Auth0Domain == "" {
+		slog.Error("Auth0 domain not set")
+	}
+	if config.Auth0Audience == "" {
+		slog.Error("Auth0 audience not set")
+	}
+
+	issuerURL, err := url.Parse("https://" + config.Auth0Domain + "/")
 	if err != nil {
 		log.Fatalf("Failed to parse the issuer url: %v", err)
 	}
@@ -38,7 +46,7 @@ func EnsureValidToken() func(next http.Handler) http.Handler {
 		provider.KeyFunc,
 		validator.RS256,
 		issuerURL.String(),
-		[]string{os.Getenv("AUTH0_AUDIENCE")},
+		[]string{config.Auth0Audience},
 		validator.WithCustomClaims(
 			func() validator.CustomClaims {
 				return &CustomClaims{}

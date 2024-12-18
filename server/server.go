@@ -1,8 +1,8 @@
 package server
 
 import (
-	"retrolink-backend/http_server"
-	"retrolink-backend/types"
+	"goservertemplate/http_server"
+	"goservertemplate/types"
 )
 
 type Server struct {

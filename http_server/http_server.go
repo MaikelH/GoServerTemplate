@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-fuego/fuego"
+	"goservertemplate/errors"
+	"goservertemplate/http_server/controllers"
+	"goservertemplate/types"
 	"log/slog"
-	"retrolink-backend/errors"
-	"retrolink-backend/http_server/controllers"
-	"retrolink-backend/types"
 )
 
 func StartHTTPServer(c *types.Configuration) error {
@@ -40,7 +40,7 @@ func StartHTTPServer(c *types.Configuration) error {
 	apiGroup := fuego.Group(s, "/api/v1")
 
 	userController := controllers.UserController{}
-	userController.MountRoutes(apiGroup)
+	userController.MountRoutes(apiGroup, c)
 
 	err := s.Run()
 	if err != nil {
