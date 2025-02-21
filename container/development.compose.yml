@@ -1,0 +1,46 @@
+services:
+  server-template-backend-dev:
+    image: ghcr.io/retro-link/server-template-backend:latest
+    container_name: server-template-backend-dev
+    networks:
+      - proxy
+    ports:
+      - "8000:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server-template-backend-dev.rule=Host(`devapi.server-template.io`)"
+      - "traefik.http.routers.server-template-backend-dev.entrypoints=websecure"
+      - "traefik.http.routers.server-template-backend-dev.tls.certResolver=myresolver"
+      - "traefik.docker.network=proxy"
+    environment:
+      - APP_DATABASE_URL=postgres://postgres:testpass@db:5432/server-template?sslmode=disable
+      - APP_OPENAPI_ADDRESS=https://devapi.server-template.io/
+
+  db:
+    image: postgres:15
+    networks:
+        - proxy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_DB: server-template
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  proxy:
+    name: proxy
+    external: true
+
+volumes:
+  postgres_data:

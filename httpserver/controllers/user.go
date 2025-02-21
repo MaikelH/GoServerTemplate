@@ -5,7 +5,7 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-fuego/fuego"
-	"goservertemplate/http_server/middleware"
+	"goservertemplate/httpserver/middleware"
 	"goservertemplate/types"
 	"net/http"
 )

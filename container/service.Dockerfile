@@ -12,10 +12,13 @@ RUN go mod download
 COPY . .
 
 # Build the Go application
-RUN go build -o build/server main.go
+RUN go build -tags=viper_bind_struct -o build/server main.go
 
 # Use a minimal base image to run the application
 FROM debian:12-slim
+
+# Install root certificates
+RUN apt-get update && apt-get install -y ca-certificates
 
 # Set the working directory inside the container
 WORKDIR /app
