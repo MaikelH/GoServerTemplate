@@ -1,12 +1,9 @@
 module goservertemplate
 
-go 1.23.3
-
-toolchain go1.24.0
+go 1.24.0
 
 require (
 	github.com/doug-martin/goqu/v9 v9.19.0
-	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/pressly/goose/v3 v3.24.1
 	github.com/rs/cors v1.11.1
