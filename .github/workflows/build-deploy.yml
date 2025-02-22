@@ -2,6 +2,7 @@ name: Build go-server-template
 on: [push, pull_request]
 env:
   IMAGE_NAME: go-server-template
+  NAME_SPACE: maikelh
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -54,19 +55,19 @@ jobs:
       - name: Get Version
         run: echo $VERSION
       - name: Build Docker container
-        run: docker build -t ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:${{ env.VERSION }} -f container/service.Dockerfile .
+        run: docker build -t ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} -f container/service.Dockerfile .
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Tag image Latest
         if: github.ref == 'refs/heads/development'
         run: |
-          docker tag ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:latest
-          docker push ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:latest
+          docker tag ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:latest
+          docker push ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:latest
       - name: Tag image Production Latest
         if: github.ref == 'refs/heads/main'
         run: |
-          docker tag ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:prod-latest
-          docker push ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:prod-latest
+          docker tag ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:prod-latest
+          docker push ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:prod-latest
       - name: Push image
         run: |
-            docker push ghcr.io/GoServerTemplate/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            docker push ghcr.io/${{env.NAME_SPACE}}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
