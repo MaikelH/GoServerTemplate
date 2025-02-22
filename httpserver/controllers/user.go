@@ -24,13 +24,13 @@ func (u *UserController) MountRoutes(s *fuego.Server, config *types.Configuratio
 		claims := token.CustomClaims.(*middleware.CustomClaims)
 		if !claims.HasScope("read:messages") {
 			context.Response().WriteHeader(http.StatusForbidden)
-			context.Response().Write([]byte(`{"message":"Insufficient scope."}`))
-			return nil, nil
+			_, err := context.Response().Write([]byte(`{"message":"Insufficient scope."}`))
+			return nil, err
 		}
 
 		context.Response().WriteHeader(http.StatusOK)
-		context.Response().Write([]byte(`{"message":"Hello from a private endpoint! You need to be authenticated to see this."}`))
-		return "UserProfile", nil
+		_, err := context.Response().Write([]byte(`{"message":"Hello from a private endpoint! You need to be authenticated to see this."}`))
+		return "UserProfile", err
 	})
 	get.Operation.Description = "Get user profile"
 	get.Operation.Summary = "Get user profile"

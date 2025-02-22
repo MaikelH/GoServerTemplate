@@ -59,11 +59,14 @@ func EnsureValidToken(config *types.Configuration) func(next http.Handler) http.
 	}
 
 	errorHandler := func(w http.ResponseWriter, r *http.Request, err error) {
-		log.Printf("Encountered error while validating JWT: %v", err)
+		slog.Info("encountered error while validating JWT", "error", err)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(`{"message":"Failed to validate JWT."}`))
+		_, err = w.Write([]byte(`{"message":"Failed to validate JWT."}`))
+		if err != nil {
+			slog.Error("Failed to write response", "error", err)
+		}
 	}
 
 	middleware := jwtmiddleware.New(
